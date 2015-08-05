@@ -1,60 +1,49 @@
-﻿@model dynamic
+﻿<button class="AddUser">Add User</button>
+<div id="AddUserForm"></div>
 
-@{
-    ViewBag.Title = "title";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+@section scripts
+{
+    @Scripts.Render("~/bundles/jquery-ui")
 
-<h2>title</h2>
-
-@Html.ActionLink("Click", "PopUp")
-
-<div id="myModal" class="modal fade in">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div id="myModalContent"></div>
-        </div>
-    </div>
-</div>
-
-<script src="~/Scripts/jquery-1.10.2.js"></script>
-
-<script type="text/javascript">
-    $(function () {
-        $.ajaxSetup({ cache: false });
-
-        $("a[data-modal]").on("click", function (e) {
-            // hide dropdown if any (this is used wehen invoking modal from link in bootstrap dropdown )
-            //$(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
-
-            $('#myModalContent').load(this.href, function () {
-                $('#myModal').modal({
-                    /*backdrop: 'static',*/
-                    keyboard: true
-                }, 'show');
-                bindForm(this);
-            });
-            return false;
-        });
-    });
-
-    function bindForm(dialog) {
-        $('form', dialog).submit(function () {
-            $.ajax({
-                url: this.action,
-                type: this.method,
-                data: $(this).serialize(),
-                success: function (result) {
-                    if (result.success) {
-                        $('#myModal').modal('hide');
-                        $('#replacetarget').load(result.url); //  Load data from the server and place the returned HTML into the matched element
-                    } else {
-                        $('#myModalContent').html(result);
-                        bindForm(dialog);
+    <script type="text/javascript">
+        $('.AddUser').on('click', function() {
+            $("#AddUserForm").dialog({
+                autoOpen: true,
+                position: { my: "center", at: "top+350", of: window },
+                width: 1000,
+                resizable: false,
+                title: 'Add User Form',
+                modal: true,
+                open: function() {
+                    $(this).load('@Url.Action("PopUp", "PopUp")');
+                },
+                buttons: {
+                    "Add User": function() {
+                        addUserInfo();
+                    },
+                    Cancel: function() {
+                        $(this).dialog("close");
                     }
                 }
             });
             return false;
         });
-    }
-</script>
+
+        function addUserInfo() {
+            $.ajax({
+                url: '@Url.Action("AddUserInfo", "Home")',
+                type: 'POST',
+                data: $("#myForm").serialize(),
+                success: function(data) {
+                    if (data) {
+                        $(':input', '#myForm')
+                            .not(':button, :submit, :reset, :hidden')
+                            .val('')
+                            .removeAttr('checked')
+                            .removeAttr('selected');
+                    }
+                }
+            });
+        }
+    </script>
+}
