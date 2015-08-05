@@ -1,49 +1,25 @@
-﻿<button class="AddUser">Add User</button>
-<div id="AddUserForm"></div>
+﻿<div id="gameModal" class="modal fade" role="dialog" data-url='@Url.Action("GetGameListing")'>
+    <div class="modal-dialog" role="document">
+        <div id="gameContainer" class="modal-content">
+        </div>
+    </div>
+</div>
+
+<button id="showGame">Show Game Listing</button>
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/jquery-ui")
-
     <script type="text/javascript">
-        $('.AddUser').on('click', function() {
-            $("#AddUserForm").dialog({
-                autoOpen: true,
-                position: { my: "center", at: "top+350", of: window },
-                width: 1000,
-                resizable: false,
-                title: 'Add User Form',
-                modal: true,
-                open: function() {
-                    $(this).load('@Url.Action("PopUp", "PopUp")');
-                },
-                buttons: {
-                    "Add User": function() {
-                        addUserInfo();
-                    },
-                    Cancel: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-            return false;
-        });
+        $(document).ready(function() {
+            $('#showGame').click(function() {
+                var url = $('#gameModal').data('url');
 
-        function addUserInfo() {
-            $.ajax({
-                url: '@Url.Action("AddUserInfo", "Home")',
-                type: 'POST',
-                data: $("#myForm").serialize(),
-                success: function(data) {
-                    if (data) {
-                        $(':input', '#myForm')
-                            .not(':button, :submit, :reset, :hidden')
-                            .val('')
-                            .removeAttr('checked')
-                            .removeAttr('selected');
-                    }
-                }
+                $.get(url, function(data) {
+                    $('#gameContainer').html(data);
+
+                    $('#gameModal').modal('show');
+                });
             });
-        }
+        });
     </script>
 }

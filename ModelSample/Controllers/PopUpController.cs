@@ -25,6 +25,12 @@ namespace ModelSample.Controllers
         {
             return RedirectToAction("Register", "Account");
         }
+
+        [HttpGet]
+        public ActionResult GetGameListing()
+        {
+            return PartialView("_PopUp");
+        }
     }
 
     public class MyModel
