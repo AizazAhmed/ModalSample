@@ -27,7 +27,7 @@ namespace ModelSample.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetGameListing()
+        public ActionResult GetPopUpPartial()
         {
             return PartialView("_PopUp");
         }

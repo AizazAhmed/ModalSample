@@ -1,0 +1,25 @@
+﻿<div id="myModal" class="modal fade" role="dialog" data-url='@Url.Action("GetPopUpPartial")'>
+    <div class="modal-dialog" role="document">
+        <div id="myContainer" class="modal-content">
+        </div>
+    </div>
+</div>
+
+<button id="showDialog">Click</button>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#showDialog').click(function () {
+                var url = $('#myModal').data('url');
+
+                $.get(url, function(data) {
+                    $('#myContainer').html(data);
+
+                    $('#myModal').modal('show');
+                });
+            });
+        });
+    </script>
+}
